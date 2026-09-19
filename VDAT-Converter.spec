@@ -4,7 +4,7 @@
 a = Analysis(
     ['desktop_vdat_converter.py'],
     pathex=[],
-    binaries=[],
+    binaries=[('dist/ffmpeg.exe', '.')],
     datas=[],
     hiddenimports=[],
     hookspath=[],

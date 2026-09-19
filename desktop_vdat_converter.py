@@ -1,6 +1,6 @@
 """VDAT 目录转 MP4（Windows 图形版）
 
-需要：Python 3.10+；ffmpeg.exe 放在本文件同目录，或加入 PATH。
+需要：Python 3.10+；发布版已内置 ffmpeg，源码运行时可把 ffmpeg.exe 放在本文件同目录或加入 PATH。
 仅处理本地已有密钥的 .vdat_contents 目录。
 """
 
@@ -116,11 +116,29 @@ def find_vdat_dirs(root: Path) -> list[Path]:
     return sorted((p for p in root.rglob("*") if is_vdat_dir(p)), key=lambda p: str(p).lower())
 
 
+def bundled_path(name: str) -> Path:
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return Path(sys._MEIPASS) / name
+    if getattr(sys, "frozen", False):
+        return Path(sys.executable).parent / name
+    return Path(__file__).parent / name
+
+
+def find_ffmpeg() -> str:
+    bundled = bundled_path("ffmpeg.exe")
+    if bundled.is_file():
+        return str(bundled)
+    beside_exe = Path(sys.executable).parent / "ffmpeg.exe"
+    if beside_exe.is_file():
+        return str(beside_exe)
+    from_path = shutil.which("ffmpeg")
+    if from_path:
+        return from_path
+    raise RuntimeError("找不到 ffmpeg。发布版应已内置；源码运行时请将 ffmpeg.exe 放到工具旁边，或加入系统 PATH。")
+
+
 def decrypt_directory(source: Path, output: Path, report) -> None:
-    app_dir = Path(sys.executable).parent if getattr(sys, "frozen", False) else Path(__file__).parent
-    ffmpeg = shutil.which("ffmpeg") or str(app_dir / "ffmpeg.exe")
-    if not Path(ffmpeg).is_file() and shutil.which("ffmpeg") is None:
-        raise RuntimeError("找不到 ffmpeg。请将 ffmpeg.exe 放到工具旁边，或加入系统 PATH。")
+    ffmpeg = find_ffmpeg()
     key = (source / "0.key").read_bytes()
     if len(key) != 16:
         raise RuntimeError("0.key 不是有效的 AES-128 密钥。")
@@ -156,6 +174,7 @@ class App:
         self.output_dir = StringVar(value=str(Path.home() / "Videos" / "VdatConverted"))
         self.status = StringVar(value="选择一个 .vdat_contents 目录，或选择包含多个视频目录的上级目录。")
         self.items: list[Path] = []
+        self.last_output_dir: Path | None = None
 
         Label(root, text="VDAT 转 MP4", font=("Segoe UI", 20, "bold")).pack(anchor="w", padx=18, pady=(16, 4))
         Label(root, text="自动读取 0.key，解密数字分片并保留原文件。", fg="#555").pack(anchor="w", padx=18, pady=(0, 12))
@@ -171,6 +190,7 @@ class App:
         self.listbox.pack(side=LEFT, fill=BOTH, expand=True); scroll.config(command=self.listbox.yview)
         bottom = Frame(root); bottom.pack(fill="x", padx=18, pady=(0, 16))
         Button(bottom, text="开始转换", command=self.start, width=14).pack(side=RIGHT)
+        Button(bottom, text="打开输出目录", command=self.open_output_dir, width=14).pack(side=RIGHT, padx=(0, 8))
         Label(bottom, textvariable=self.status, anchor="w").pack(side=LEFT, fill="x", expand=True)
 
     def choose_input(self):
@@ -191,18 +211,29 @@ class App:
             messagebox.showwarning("提示", "请先选择并扫描输入目录。"); return
         threading.Thread(target=self.run, daemon=True).start()
 
+    def open_output_dir(self):
+        target = self.last_output_dir or Path(self.output_dir.get())
+        target.mkdir(parents=True, exist_ok=True)
+        os.startfile(target)
+
     def run(self):
         success = 0
+        output_dir = Path(self.output_dir.get())
         for item in self.items:
-            output = Path(self.output_dir.get()) / (item.name.removesuffix(".vdat_contents") + ".mp4")
+            output = output_dir / (item.name.removesuffix(".vdat_contents") + ".mp4")
             try:
                 decrypt_directory(item, output, lambda text: self.root.after(0, self.status.set, text))
+                self.last_output_dir = output.parent
                 success += 1
             except Exception as exc:
                 self.root.after(0, self.status.set, f"失败：{item.name} - {exc}")
                 continue
         self.root.after(0, self.status.set, f"完成：{success}/{len(self.items)} 个视频已输出。")
-        self.root.after(0, lambda: messagebox.showinfo("转换完成", f"成功转换 {success}/{len(self.items)} 个视频。"))
+        self.root.after(0, lambda: self.finish_message(success))
+
+    def finish_message(self, success: int):
+        if messagebox.askyesno("转换完成", f"成功转换 {success}/{len(self.items)} 个视频。\n是否打开输出目录？"):
+            self.open_output_dir()
 
 
 if __name__ == "__main__":

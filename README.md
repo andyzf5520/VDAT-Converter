@@ -1,64 +1,34 @@
 # VDAT Converter
 
-VDAT Converter 是一个 Windows 和 Android 工具，用于把已下载到本地、且用户拥有或获授权的视频转换为 MP4。
+VDAT Converter is a Windows and Android tool that converts locally downloaded VDAT videos to MP4.
 
-## 支持的来源
+VDAT Converter 是一个 Windows 和 Android 工具，用于把本地已下载的 VDAT 视频转换为 MP4。
 
-### VDAT 视频目录
+## Documentation
 
-选择视频下载目录即可。程序会自动识别目录内的 `0.key` 和数字分片，不要求用户手动进入或填写 `.vdat_contents`。
+- [中文说明](docs/README.zh-CN.md)
+- [English Guide](docs/README.en-US.md)
+- [版本变更 / Changelog](docs/CHANGELOG.md)
+- [构建说明 / Build](docs/BUILD.md)
+- [发布说明 / Release](docs/RELEASE.md)
 
-### `.vdat` 视频文件
+## Release Packages
 
-部分 `.vdat` 文件本身就是 MP4，只是扩展名仍为 `.vdat`，程序会识别 MP4 文件头并直接保存为 MP4。
+Install packages are stored in `release/v1.0.1/`:
 
-几 KB 的 `.vdat` 通常是播放列表或元数据，实际视频仍在同名 VDAT 视频目录中。遇到这种文件时，请改选对应的视频目录。
+- `VDAT-Converter-v1.0.1-windows-x64.zip`
+- `VDAT-Converter-v1.0.1-android-apk.zip`
 
-## Android 使用方法
+The same files are attached to the GitHub Release.
 
-1. 安装 `VDAT-Converter-Android.apk`。
-2. 在“保存目录”中选择输出位置，默认是 `Download/VdatConverter`。
-3. 在“来源类型”中选择“VDAT 视频目录”或“.vdat 视频文件”。
-4. 选择来源后，输出文件名会自动填充，也可以自行修改。
-5. 点击“开始转换”，完成后 MP4 会保存到指定目录。
+## Highlights
 
-Android 端使用 FFmpeg 合并完整分片，避免只生成第一个分片的短视频。
+- Converts VDAT chunk directories with `0.key` and numeric media chunks.
+- Supports complete `.vdat` files that are MP4 files with a different extension.
+- Android supports custom save folder and output file name.
+- Android can open the converted video or its output folder after conversion.
+- Windows release is a single EXE with FFmpeg bundled inside.
 
-## Windows 使用方法
+## Notice
 
-发布包位于 `dist`：
-
-- `VDAT-Converter.exe`
-- `ffmpeg.exe`
-
-两个文件需要放在同一个目录。运行 EXE 后选择 VDAT 视频目录，设置输出目录即可。
-
-## 从源码构建
-
-### Windows
-
-```powershell
-python -m pip install pycryptodome pyinstaller
-python -m PyInstaller --clean --noconfirm VDAT-Converter.spec
-```
-
-桌面版需要 FFmpeg 运行文件。请把对应的 `ffmpeg.exe` 放在生成的 EXE 旁边。
-
-### Android
-
-```powershell
-gradle.bat assembleDebug --no-daemon
-```
-
-APK 输出在 `app/build/outputs/apk/debug/app-debug.apk`。
-
-## 项目结构
-
-- `app/`：Android 客户端
-- `desktop_vdat_converter.py`：Windows 桌面端源码
-- `VDAT-Converter.spec`：Windows 打包配置
-- `dist/`：桌面发布文件
-
-## 说明
-
-本项目只处理本地已有密钥和视频数据，不用于绕过账号、权限或版权保护。请仅转换自己拥有或获授权的视频。
+This project only processes local video files and keys that you own or are authorized to use. It is not intended to bypass account access, permissions, or copyright protection.

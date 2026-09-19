@@ -1,5 +1,6 @@
 .gradle/
 .kotlin/
+.vscode/
 build/
 app/build/
 TestHarness/bin/
@@ -8,4 +9,10 @@ __pycache__/
 test-results/
 local.properties
 dist/ffmpeg.exe
+dist/*.exe
+VDAT-Converter-Android.apk
+release/*/android-apk/
+release/*/windows-x64/
+release/*/*.zip
+release/old-local-packages/
 *.pyc
