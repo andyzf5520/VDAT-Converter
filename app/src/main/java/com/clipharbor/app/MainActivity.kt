@@ -14,14 +14,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.lifecycle.lifecycleScope
 import com.arthenica.ffmpegkit.FFmpegKit
 import com.arthenica.ffmpegkit.ReturnCode
@@ -341,20 +344,35 @@ private fun ConverterScreen(
     ) {
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
             Column(
-                Modifier.padding(horizontal = 20.dp, vertical = 18.dp).verticalScroll(rememberScrollState()),
+                Modifier
+                    .fillMaxSize()
+                    .background(Brush.verticalGradient(listOf(Color(0xFFEDE7FF), Color(0xFFF9F7FF), Color.White)))
+                    .padding(horizontal = 20.dp, vertical = 18.dp)
+                    .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Spacer(Modifier.height(12.dp))
-                Text("VDAT Converter", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-                Text("轻松将 VDAT 视频保存为完整 MP4", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)) {
+                Card(
+                    shape = RoundedCornerShape(28.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF6B50B8))
+                ) {
+                    Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Text("VDAT Converter", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Color.White)
+                        Text("轻松将 VDAT 视频保存为完整 MP4", color = Color(0xFFEDE7FF))
+                    }
+                }
+                Card(
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
+                ) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text("设置", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-                        Text("保存目录", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
-                        OutlinedButton(onClick = onChooseOutput, modifier = Modifier.fillMaxWidth()) { Text(outputName) }
-                        Text("选择来源", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                        Text("步骤 1 · 保存位置", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
+                        OutlinedButton(onClick = onChooseOutput, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) { Text(outputName) }
+                        Text("步骤 2 · 视频来源", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.primary)
                 Box {
-                    OutlinedButton(onClick = { modeMenuExpanded = true }, modifier = Modifier.fillMaxWidth()) { Text("来源类型：${sourceMode.label}") }
+                    OutlinedButton(onClick = { modeMenuExpanded = true }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(16.dp)) { Text("来源类型：${sourceMode.label}") }
                     DropdownMenu(expanded = modeMenuExpanded, onDismissRequest = { modeMenuExpanded = false }) {
                         SourceMode.values().forEach { mode ->
                             DropdownMenuItem(
@@ -366,9 +384,10 @@ private fun ConverterScreen(
                 }
                 OutlinedButton(
                     onClick = if (sourceMode == SourceMode.ChunkDirectory) onChooseInput else onChooseVdatFile,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp)
                 ) { Text(if (inputName.isBlank()) "选择${sourceMode.label}" else inputName) }
-                        OutlinedTextField(value = customName, onValueChange = { customName = it }, singleLine = true, modifier = Modifier.fillMaxWidth(), label = { Text("输出文件名") }, placeholder = { Text("可修改，自动使用来源名称") })
+                        OutlinedTextField(value = customName, onValueChange = { customName = it }, singleLine = true, shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth(), label = { Text("输出文件名") }, placeholder = { Text("可修改，自动使用来源名称") })
                     }
                 }
                 Button(enabled = inputName.isNotBlank() && !running, onClick = {
@@ -377,8 +396,8 @@ private fun ConverterScreen(
                         status = message
                         if (message.startsWith("转换完成") || message.startsWith("转换失败")) running = false
                     }
-                }, modifier = Modifier.fillMaxWidth().height(54.dp)) { if (running) CircularProgressIndicator(color = Color.White) else Text("开始转换") }
-                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
+                }, modifier = Modifier.fillMaxWidth().height(54.dp), shape = RoundedCornerShape(18.dp), colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B50B8))) { if (running) CircularProgressIndicator(color = Color.White) else Text("开始转换") }
+                Card(shape = RoundedCornerShape(18.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                     Text(status, Modifier.padding(14.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
                 Text("支持 VDAT 视频目录和完整 .vdat 视频文件；仅处理你拥有或获授权的视频。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
