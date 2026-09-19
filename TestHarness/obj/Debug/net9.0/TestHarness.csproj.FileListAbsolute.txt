@@ -1,0 +1,14 @@
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\bin\Debug\net9.0\TestHarness.exe
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\bin\Debug\net9.0\TestHarness.deps.json
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\bin\Debug\net9.0\TestHarness.runtimeconfig.json
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\bin\Debug\net9.0\TestHarness.dll
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\bin\Debug\net9.0\TestHarness.pdb
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.GeneratedMSBuildEditorConfig.editorconfig
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.AssemblyInfoInputs.cache
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.AssemblyInfo.cs
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.csproj.CoreCompileInputs.cache
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.dll
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\refint\TestHarness.dll
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.pdb
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\TestHarness.genruntimeconfig.cache
+D:\Coding\AIWorking\GPTProject\VDATConverter\TestHarness\obj\Debug\net9.0\ref\TestHarness.dll

@@ -1,0 +1,10 @@
+.gradle/
+.kotlin/
+build/
+app/build/
+__pycache__/
+test-results/
+local.properties
+dist/ffmpeg.exe
+*.pyc
+
