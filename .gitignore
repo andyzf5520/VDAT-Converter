@@ -2,9 +2,10 @@
 .kotlin/
 build/
 app/build/
+TestHarness/bin/
+TestHarness/obj/
 __pycache__/
 test-results/
 local.properties
 dist/ffmpeg.exe
 *.pyc
-
